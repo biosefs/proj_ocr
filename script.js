@@ -52,5 +52,5 @@ document.getElementById('processImage').addEventListener('click', async () => {
  * - Ensures text is readable and well-structured.
  */
 function cleanText(text) {
-  return text
+  return text.replace(/(\S)\n(\S)/g, "$1 $2");
 }
