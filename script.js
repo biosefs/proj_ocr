@@ -1,77 +1,65 @@
-document.getElementById('processImage').addEventListener('click', async () => {
-  const image = document.getElementById('imageUpload').files[0];
-  const language = document.getElementById('languageSelect').value;
+document.getElementById("scan-button").addEventListener("click", () => {
+  const fileInput = document.getElementById("file-input");
+  const output = document.getElementById("output");
 
-  console.log("Button clicked!");
-  console.log("Selected language:", language);
-
-  if (!image) {
-    alert('Please upload an image.');
-    console.log("No image uploaded.");
+  if (fileInput.files.length === 0) {
+    output.textContent = "Please select an image.";
     return;
   }
 
-  if (!image.type.startsWith('image/')) {
-    alert('Please upload a valid image file.');
-    console.log("Invalid file type:", image.type);
-    return;
-  }
-
+  const file = fileInput.files[0];
   const reader = new FileReader();
-  reader.onload = () => {
-    console.log("Image loaded successfully.");
 
-    Tesseract.recognize(reader.result, language, {
-      logger: (m) => {
-        if (m.status === 'recognizing text') {
-          const progress = Math.round(m.progress * 100);
-          document.getElementById('progress').innerText = `Progress: ${progress}%`;
-          console.log("Progress:", progress, "%");
-        }
-      },
-    })
+  reader.onload = function () {
+    Tesseract.recognize(reader.result, "eng")
       .then(({ data: { text } }) => {
         const cleanedText = cleanText(text);
-        document.getElementById('output').innerText = cleanedText;
-        console.log("OCR output (cleaned):", cleanedText);
+        output.textContent = cleanedText;
       })
       .catch((error) => {
-        document.getElementById('output').innerText = 'Error processing the image. Please try again.';
-        console.error("OCR Error:", error);
+        output.textContent = "Error during OCR: " + error.message;
       });
   };
-  reader.onerror = (error) => {
-    console.error("FileReader Error:", error);
-  };
-  reader.readAsDataURL(image);
+
+  reader.readAsDataURL(file);
 });
 
-/**
- * Function to clean and format OCR text.
- * - Removes extra spaces and newlines.
- * - Ensures text is readable and well-structured.
- */
 function cleanText(text) {
-  // Extract main body between specific delimiters
-  const body = extractMainBody(text);
+  const mainBody = extractMainBody(text);
 
-  // Clean and reformat the main body
-  return body
+  return mainBody
     .replace(/(\S)\n(\S)/g, "$1 $2") // Joins lines with a single line break
     .replace(/\s{2,}/g, " ") // Replaces multiple spaces with one
-    .replace(/\n{2,}/g, "\n") // Ensures only one newline for paragraphs
     .replace(/—/g, "-") // Replaces em dash with a regular dash
     .trim(); // Removes leading and trailing whitespace
 }
 
-/**
- * Extracts the main body of text based on specific delimiters or patterns.
- * Modify the start and end delimiters as needed.
- */
 function extractMainBody(text) {
-  const startDelimiter = /opportunities given to other students:/i; // Example start marker
-  const endDelimiter = /\d+\.\spromote/i; // Example end marker
+  const lines = text.split("\n");
+  const mainBody = [];
+  let inBody = false;
 
-  const match = text.match(new RegExp(`${startDelimiter.source}[\\s\\S]*?${endDelimiter.source}`, "i"));
-  return match ? match[0] : text; // If no match, return the entire text
+  lines.forEach((line) => {
+    if (!inBody && isStartOfMainBody(line)) {
+      inBody = true;
+    }
+
+    if (inBody) {
+      mainBody.push(line.trim());
+    }
+
+    if (inBody && isEndOfMainBody(line)) {
+      inBody = false;
+    }
+  });
+
+  return mainBody.join(" ").replace(/\s+/g, " ").trim();
+}
+
+function isStartOfMainBody(line) {
+  return /\d+\./.test(line) || line.length > 20;
+}
+
+function isEndOfMainBody(line) {
+  return line.length < 10 && !/\d/.test(line);
 }
