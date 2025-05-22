@@ -53,6 +53,6 @@ document.getElementById('processImage').addEventListener('click', async () => {
  */
 function cleanText(text) {
   return text
-    .replace(/\s{2,}/g, ' ') // Replace multiple spaces with a single space
+    // Replace multiple spaces with a single space
     .replace(/\n{2,}/g, '/n')
 }
