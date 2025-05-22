@@ -10,7 +10,14 @@
   <div class="container">
     <h1>OCR Implementation</h1>
     <input type="file" id="imageUpload" accept="image/*" />
+    <select id="languageSelect">
+      <option value="eng">English</option>
+      <option value="spa">Spanish</option>
+      <option value="fra">French</option>
+      <option value="deu">German</option>
+    </select>
     <button id="processImage">Process Image</button>
+    <div id="progress">Progress: 0%</div>
     <div id="output"></div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js"></script>
