@@ -20,6 +20,7 @@ document.getElementById('processImage').addEventListener('click', async () => {
   const reader = new FileReader();
   reader.onload = () => {
     console.log("Image loaded successfully.");
+
     Tesseract.recognize(reader.result, language, {
       logger: (m) => {
         if (m.status === 'recognizing text') {
@@ -28,6 +29,7 @@ document.getElementById('processImage').addEventListener('click', async () => {
           console.log("Progress:", progress, "%");
         }
       },
+      tessedit_char_whitelist: "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", // Improves text filtering
     })
       .then(({ data: { text } }) => {
         document.getElementById('output').innerText = text;
@@ -38,8 +40,10 @@ document.getElementById('processImage').addEventListener('click', async () => {
         console.error("OCR Error:", error);
       });
   };
+
   reader.onerror = (error) => {
     console.error("FileReader Error:", error);
   };
+
   reader.readAsDataURL(image);
 });
