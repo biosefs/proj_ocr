@@ -52,10 +52,26 @@ document.getElementById('processImage').addEventListener('click', async () => {
  * - Ensures text is readable and well-structured.
  */
 function cleanText(text) {
-  return text
+  // Extract main body between specific delimiters
+  const body = extractMainBody(text);
+
+  // Clean and reformat the main body
+  return body
     .replace(/(\S)\n(\S)/g, "$1 $2") // Joins lines with a single line break
     .replace(/\s{2,}/g, " ") // Replaces multiple spaces with one
     .replace(/\n{2,}/g, "\n") // Ensures only one newline for paragraphs
     .replace(/—/g, "-") // Replaces em dash with a regular dash
     .trim(); // Removes leading and trailing whitespace
+}
+
+/**
+ * Extracts the main body of text based on specific delimiters or patterns.
+ * Modify the start and end delimiters as needed.
+ */
+function extractMainBody(text) {
+  const startDelimiter = /opportunities given to other students:/i; // Example start marker
+  const endDelimiter = /\d+\.\spromote/i; // Example end marker
+
+  const match = text.match(new RegExp(`${startDelimiter.source}[\\s\\S]*?${endDelimiter.source}`, "i"));
+  return match ? match[0] : text; // If no match, return the entire text
 }
