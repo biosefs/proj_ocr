@@ -20,7 +20,6 @@ document.getElementById('processImage').addEventListener('click', async () => {
   const reader = new FileReader();
   reader.onload = () => {
     console.log("Image loaded successfully.");
-
     Tesseract.recognize(reader.result, language, {
       logger: (m) => {
         if (m.status === 'recognizing text') {
@@ -31,9 +30,8 @@ document.getElementById('processImage').addEventListener('click', async () => {
       },
     })
       .then(({ data: { text } }) => {
-        const cleanedText = cleanText(text);
-        document.getElementById('output').innerText = cleanedText;
-        console.log("OCR output (cleaned):", cleanedText);
+        document.getElementById('output').innerText = text;
+        console.log("OCR output:", text);
       })
       .catch((error) => {
         document.getElementById('output').innerText = 'Error processing the image. Please try again.';
@@ -45,15 +43,3 @@ document.getElementById('processImage').addEventListener('click', async () => {
   };
   reader.readAsDataURL(image);
 });
-
-/**
- * Function to clean and format OCR text.
- * - Removes extra spaces and newlines.
- * - Ensures text is readable and well-structured.
- */
-function cleanText(text) {
-  return text
-    .replace(/\s{2,}/g, ' ') // Replace multiple spaces with a single space
-    .replace(/\n{2,}/g, '\n') // Replace multiple newlines with a single newline
-    .trim(); // Remove leading/trailing spaces
-}
