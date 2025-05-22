@@ -55,6 +55,5 @@ function cleanText(text) {
   return text
     .replace(/\s{2,}/g, " ") // Replaces multiple spaces with one
     .replace(/\n{2,}/g, "\n") // Replaces multiple newlines with one
-    .replace(/(\d+)\./g, "\n$1.") // Ensures numbered lists start on a new line
-    .trim(); // Removes leading and trailing
+    .replace(/(\d+)\./g, "\n$1.") // Ensures numbered lists start on a new line   
 }
