@@ -52,5 +52,10 @@ document.getElementById('processImage').addEventListener('click', async () => {
  * - Ensures text is readable and well-structured.
  */
 function cleanText(text) {
-  return text.replace(/(\S)\n(\S)/g, "$1 $2");
+  return text
+    .replace(/(\S)\n(\S)/g, "$1 $2") // Joins lines with a single line break
+    .replace(/\s{2,}/g, " ") // Replaces multiple spaces with one
+    .replace(/\n{2,}/g, "\n") // Ensures only one newline for paragraphs
+    .replace(/—/g, "-") // Replaces em dash with a regular dash
+    .trim(); // Removes leading and trailing whitespace
 }
