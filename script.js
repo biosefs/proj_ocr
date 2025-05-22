@@ -53,5 +53,5 @@ document.getElementById('processImage').addEventListener('click', async () => {
  */
 function cleanText(text) {
   return text
-    .trim();
+    .replace(/\n{2,}/g, "\n") // Replaces multip
 }
