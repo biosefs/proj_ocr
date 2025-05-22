@@ -28,6 +28,10 @@ function cleanText(text) {
   const mainBody = extractMainBody(text);
 
   return mainBody
+    .replace(/(\S)\n(\S)/g, "$1 $2") // Joins lines with a single line break
+    .replace(/\s{2,}/g, " ") // Replaces multiple spaces with one
+    .replace(/—/g, "-") // Replaces em dash with a regular dash
+    .trim(); // Removes leading and trailing whitespace
 }
 
 function extractMainBody(text) {
