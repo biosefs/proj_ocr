@@ -54,6 +54,11 @@ button:hover {
   margin-top: 20px;
   white-space: pre-wrap;
   word-wrap: break-word;
-  font-size: 16px;
-  text-align: left; /* Add this line to align text to the left */
+  font-size: 10px;
+  max-height: 200px;      /* Set a fixed height */
+  overflow-y: auto;       /* Enable vertical scrolling */
+  border: 1px solid #eee; /* Optional: subtle border for clarity */
+  padding: 10px;          /* Optional: padding for readability */
+  background: #fafafa;    /* Optional: light background */
+  text-align: left; 
 }
